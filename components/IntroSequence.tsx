@@ -1,5 +1,5 @@
 
-import React, { useRef, useState, useMemo, useEffect } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, PerspectiveCamera } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,7 +12,7 @@ const MeshStandardMaterial = 'meshStandardMaterial' as any;
 const PointLight = 'pointLight' as any;
 const AmbientLight = 'ambientLight' as any;
 
-const PortalRing = ({ isZooming, isMobile }: { isZooming: boolean; isMobile: boolean }) => {
+const PortalRing = ({ isZooming }: { isZooming: boolean }) => {
   const ringRef = useRef<any>(null!);
   
   useFrame((state) => {
@@ -20,7 +20,7 @@ const PortalRing = ({ isZooming, isMobile }: { isZooming: boolean; isMobile: boo
     if (ringRef.current) {
       ringRef.current.rotation.z = t * 0.2;
       ringRef.current.rotation.x = Math.sin(t * 0.5) * 0.1;
-      const s = (isMobile ? 0.6 : 1) * (1 + Math.sin(t * 2) * 0.05);
+      const s = 1 + Math.sin(t * 2) * 0.05;
       ringRef.current.scale.set(s, s, s);
     }
   });
@@ -28,7 +28,7 @@ const PortalRing = ({ isZooming, isMobile }: { isZooming: boolean; isMobile: boo
   return (
     <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
       <Mesh ref={ringRef}>
-        <TorusGeometry args={[isMobile ? 12 : 10, 0.05, 16, 100]} />
+        <TorusGeometry args={[10, 0.05, 16, 100]} />
         <MeshStandardMaterial 
           color="#0066FF" 
           emissive="#0066FF" 
@@ -37,7 +37,7 @@ const PortalRing = ({ isZooming, isMobile }: { isZooming: boolean; isMobile: boo
         />
       </Mesh>
       <Mesh rotation={[0, 0, Math.PI / 4]}>
-        <TorusGeometry args={[isMobile ? 11.8 : 9.8, 0.02, 16, 100]} />
+        <TorusGeometry args={[9.8, 0.02, 16, 100]} />
         <MeshStandardMaterial 
           color="#ffffff" 
           emissive="#ffffff" 
@@ -50,16 +50,15 @@ const PortalRing = ({ isZooming, isMobile }: { isZooming: boolean; isMobile: boo
   );
 };
 
-const CameraController = ({ isZooming, onComplete, isMobile }: { isZooming: boolean; onComplete: () => void; isMobile: boolean }) => {
+const CameraController = ({ isZooming, onComplete }: { isZooming: boolean; onComplete: () => void }) => {
   useFrame((state) => {
     if (isZooming) {
-      const targetZ = isMobile ? -30 : -50;
-      state.camera.position.z = (THREE as any).MathUtils.lerp(state.camera.position.z, targetZ, 0.04);
-      if (state.camera instanceof THREE.PerspectiveCamera) {
-        state.camera.fov = (THREE as any).MathUtils.lerp(state.camera.fov, isMobile ? 120 : 140, 0.04);
+      state.camera.position.z = (THREE as any).MathUtils.lerp(state.camera.position.z, -50, 0.04);
+      if (state.camera instanceof (THREE as any).PerspectiveCamera) {
+        state.camera.fov = (THREE as any).MathUtils.lerp(state.camera.fov, 140, 0.04);
         state.camera.updateProjectionMatrix();
       }
-      if (state.camera.position.z < (isMobile ? -15 : -20)) {
+      if (state.camera.position.z < -20) {
         onComplete();
       }
     }
@@ -73,15 +72,7 @@ interface IntroSequenceProps {
 
 const IntroSequence: React.FC<IntroSequenceProps> = ({ onFinished }) => {
   const [phase, setPhase] = useState<'idle' | 'zooming' | 'completed'>('idle');
-  const [isMobile, setIsMobile] = useState(false);
-  const sloganText = "web solutions that grow your business";
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  const sloganText = "web solution that grow your bussness";
 
   const handleInitialize = () => {
     setPhase('zooming');
@@ -89,15 +80,15 @@ const IntroSequence: React.FC<IntroSequenceProps> = ({ onFinished }) => {
 
   return (
     <div className="fixed inset-0 z-[1000] bg-[#050505] overflow-hidden">
-      <Canvas dpr={isMobile ? 1 : [1, 2]}>
-        <PerspectiveCamera makeDefault position={[0, 0, isMobile ? 50 : 40]} fov={isMobile ? 70 : 50} />
+      <Canvas>
+        <PerspectiveCamera makeDefault position={[0, 0, 40]} fov={50} />
         <AmbientLight intensity={0.2} />
         <PointLight position={[10, 10, 10]} intensity={1} color="#0066FF" />
         
         <AnimatePresence>
           {phase !== 'completed' && (
             <Group>
-              <PortalRing isZooming={phase === 'zooming'} isMobile={isMobile} />
+              <PortalRing isZooming={phase === 'zooming'} />
             </Group>
           )}
         </AnimatePresence>
@@ -105,7 +96,6 @@ const IntroSequence: React.FC<IntroSequenceProps> = ({ onFinished }) => {
         <CameraController 
           isZooming={phase === 'zooming'} 
           onComplete={() => setPhase('completed')} 
-          isMobile={isMobile}
         />
       </Canvas>
 
@@ -115,15 +105,15 @@ const IntroSequence: React.FC<IntroSequenceProps> = ({ onFinished }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 1.1 }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-10 px-6"
+            className="absolute inset-0 flex flex-col items-center justify-center z-10"
           >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.5 }}
-              className="mb-8 flex flex-col items-center w-full"
+              className="mb-6 flex flex-col items-center"
             >
-              <div className="flex flex-wrap justify-center overflow-hidden mb-6 max-w-xs md:max-w-none">
+              <div className="flex overflow-hidden mb-4">
                 {sloganText.split("").map((char, i) => (
                   <motion.span
                     key={i}
@@ -131,10 +121,10 @@ const IntroSequence: React.FC<IntroSequenceProps> = ({ onFinished }) => {
                     animate={{ opacity: 0.6, y: 0 }}
                     transition={{
                       duration: 0.8,
-                      delay: 0.8 + (i * 0.03),
+                      delay: 0.8 + (i * 0.05),
                       ease: "easeOut"
                     }}
-                    className={`font-mono text-brand-blue text-[8px] md:text-[10px] uppercase font-black tracking-[0.3em] md:tracking-[0.4em] inline-block whitespace-pre ${char === ' ' ? 'w-1.5 md:w-2' : ''}`}
+                    className={`font-mono text-brand-blue text-[8px] md:text-[10px] uppercase font-black tracking-[0.4em] inline-block whitespace-pre ${char === ' ' ? 'w-2' : ''}`}
                   >
                     {char}
                   </motion.span>
@@ -142,7 +132,7 @@ const IntroSequence: React.FC<IntroSequenceProps> = ({ onFinished }) => {
               </div>
               <motion.div
                 initial={{ width: 0 }}
-                animate={{ width: isMobile ? "60px" : "100px" }}
+                animate={{ width: "100px" }}
                 transition={{ duration: 1.5, delay: 1.5 }}
                 className="h-[1px] bg-brand-blue/30"
               />
@@ -151,17 +141,17 @@ const IntroSequence: React.FC<IntroSequenceProps> = ({ onFinished }) => {
             <motion.div
               animate={{ opacity: [0.4, 1, 0.4] }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="mb-14 font-mono text-zinc-500 text-[8px] md:text-[9px] tracking-[0.4em] md:tracking-[0.6em] uppercase font-black text-center"
+              className="mb-12 font-mono text-zinc-500 text-[9px] tracking-[0.6em] uppercase font-black"
             >
               System Offline // Awaiting Command
             </motion.div>
             
             <button
               onClick={handleInitialize}
-              className="group relative px-10 md:px-12 py-5 md:py-6 border border-brand-blue/30 overflow-hidden transition-all hover:border-brand-blue w-full max-w-[280px] md:max-w-none"
+              className="group relative px-12 py-5 border border-brand-blue/30 overflow-hidden transition-all hover:border-brand-blue"
             >
               <div className="absolute inset-0 bg-brand-blue/10 -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-              <span className="relative z-10 font-black text-white uppercase tracking-[0.3em] md:tracking-[0.4em] text-[10px] md:text-xs">
+              <span className="relative z-10 font-black text-white uppercase tracking-[0.4em] text-xs">
                 Initialize Protocol
               </span>
             </button>

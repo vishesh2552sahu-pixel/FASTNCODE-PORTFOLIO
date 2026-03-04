@@ -52,28 +52,26 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-12 md:mt-24 text-center py-16 md:py-32 glass rounded-[2rem] md:rounded-[3rem] border border-zinc-900 overflow-hidden relative"
+          className="mt-12 md:mt-24 text-center py-24 md:py-32 glass rounded-[3rem] border border-zinc-900 overflow-hidden relative"
         >
           <div className="absolute inset-0 bg-brand-blue/5 pointer-events-none" />
-          <h3 className="text-3xl md:text-7xl font-black tracking-tighter uppercase mb-8 md:mb-10 text-pretty px-6 leading-tight">
+          <h3 className="text-4xl md:text-7xl font-black tracking-tighter uppercase mb-10 text-pretty px-6">
             Explore the <span className="shimmer-text italic">Portfolio.</span>
           </h3>
-          <p className="text-zinc-500 text-base md:text-xl max-w-xl mx-auto leading-relaxed mb-12 md:mb-16 font-medium px-6 text-pretty">
+          <p className="text-zinc-500 text-lg md:text-xl max-w-xl mx-auto leading-relaxed mb-16 font-medium px-6 text-pretty">
             Witness our latest production-grade architectural builds and technical breakthroughs.
           </p>
           
-          <div className="px-6 w-full md:w-auto mx-auto inline-flex">
-            <button 
-              onClick={() => onNavigate('work')}
-              className="group relative px-8 md:px-16 py-5 md:py-6 overflow-hidden border border-zinc-800 bg-brand-obsidian/80 backdrop-blur-xl transition-all hover:border-brand-blue/60 w-full md:w-auto mx-auto inline-flex items-center justify-center gap-4 md:gap-6 rounded-xl"
-            >
-              <span className="relative z-10 font-mono uppercase tracking-[0.3em] md:tracking-[0.5em] text-[9px] md:text-[11px] font-black text-zinc-400 group-hover:text-white">
-                ACCESS PRODUCTION ARCHIVE
-              </span>
-              <div className="w-8 md:w-20 h-[1px] bg-zinc-800 group-hover:bg-brand-blue transition-all duration-700" />
-              <div className="absolute inset-0 bg-brand-blue/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-            </button>
-          </div>
+          <button 
+            onClick={() => onNavigate('work')}
+            className="group relative px-10 md:px-16 py-5 md:py-6 overflow-hidden border border-zinc-800 bg-brand-obsidian/80 backdrop-blur-xl transition-all hover:border-brand-blue/60 w-full md:w-auto mx-auto inline-flex items-center justify-center gap-6"
+          >
+            <span className="relative z-10 font-mono uppercase tracking-[0.5em] text-[10px] md:text-[11px] font-black text-zinc-400 group-hover:text-white">
+              ACCESS PRODUCTION ARCHIVE
+            </span>
+            <div className="w-12 md:w-20 h-[1px] bg-zinc-800 group-hover:bg-brand-blue transition-all duration-700" />
+            <div className="absolute inset-0 bg-brand-blue/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+          </button>
         </motion.div>
       </div>
     </div>

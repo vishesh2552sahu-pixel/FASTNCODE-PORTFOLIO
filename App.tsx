@@ -4,7 +4,6 @@ import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import Lenis from 'lenis';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import IntroSequence from './components/IntroSequence';
 import CurtainLoader from './components/CurtainLoader';
 import CustomCursor from './components/CustomCursor';
 import Starfield from './components/Starfield';
@@ -16,8 +15,7 @@ import Contact from './pages/Contact';
 export type View = 'home' | 'services' | 'work' | 'contact';
 
 const App: React.FC = () => {
-  const [isIntroActive, setIsIntroActive] = useState(true);
-  const [isLoaderActive, setIsLoaderActive] = useState(false);
+  const [isLoaderActive, setIsLoaderActive] = useState(true);
   const [showContent, setShowContent] = useState(false);
   const [currentView, setCurrentView] = useState<View>('home');
   const [targetedServiceId, setTargetedServiceId] = useState<string | null>(null);
@@ -57,12 +55,12 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (isIntroActive || isLoaderActive) {
+    if (isLoaderActive) {
       lenisRef.current?.stop();
     } else {
       lenisRef.current?.start();
     }
-  }, [isIntroActive, isLoaderActive]);
+  }, [isLoaderActive]);
 
   // Cinematic View Navigation with Scroll Reset
   useEffect(() => {
@@ -80,14 +78,13 @@ const App: React.FC = () => {
     }
   }, [currentView, targetedServiceId]);
 
-  const handleIntroFinished = () => {
-    setIsIntroActive(false);
-    setIsLoaderActive(true);
-    setTimeout(() => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
       setIsLoaderActive(false);
       setTimeout(() => setShowContent(true), 1200);
     }, 3500);
-  };
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleNavigate = (view: View, subview?: string) => {
     setTargetedServiceId(subview || null);
@@ -112,9 +109,6 @@ const App: React.FC = () => {
       />
 
       <AnimatePresence mode="wait">
-        {isIntroActive && (
-          <IntroSequence key="intro" onFinished={handleIntroFinished} />
-        )}
         {isLoaderActive && <CurtainLoader key="loader" />}
       </AnimatePresence>
 

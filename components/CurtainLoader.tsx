@@ -24,13 +24,13 @@ const CurtainLoader: React.FC = () => {
         initial={{ opacity: 1 }}
         animate={{ opacity: 0, scale: 1.4, filter: 'blur(30px)' }}
         transition={{ duration: 1, delay: 2.4 }}
-        className="relative z-[30] flex flex-col items-center px-6"
+        className="relative z-[30] flex flex-col items-center"
       >
         <svg
-          width="clamp(120px, 40vw, 180px)"
-          height="clamp(120px, 40vw, 180px)"
+          width="180"
+          height="180"
           viewBox="0 0 100 100"
-          className="mb-8 md:mb-10 overflow-visible"
+          className="mb-10 overflow-visible"
         >
           <defs>
             <filter id="glow-heavy">
@@ -114,7 +114,7 @@ const CurtainLoader: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.1, scale: 1.1 }}
             transition={{ duration: 2, delay: 1 }}
-            className="absolute inset-0 text-xl md:text-3xl font-black text-brand-blue blur-xl select-none"
+            className="absolute inset-0 text-3xl font-black text-brand-blue blur-xl select-none"
           >
             FAST & CODE
           </motion.h1>
@@ -123,11 +123,11 @@ const CurtainLoader: React.FC = () => {
             initial={{ opacity: 0, letterSpacing: '0.4em', y: 10 }}
             animate={{ 
               opacity: 1, 
-              letterSpacing: '0.6em',
+              letterSpacing: '0.8em',
               y: 0 
             }}
             transition={{ duration: 1.2, delay: 1.4, ease: [0.22, 1, 0.36, 1] }}
-            className="text-xl md:text-3xl font-black text-white uppercase shimmer-text font-sans relative z-10"
+            className="text-3xl font-black text-white uppercase shimmer-text font-sans relative z-10"
           >
             FAST & CODE
           </motion.h1>
@@ -136,14 +136,14 @@ const CurtainLoader: React.FC = () => {
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: '100%', opacity: 1 }}
             transition={{ duration: 1.5, delay: 1.8, ease: "easeInOut" }}
-            className="h-[1px] bg-gradient-to-r from-transparent via-brand-blue/50 to-transparent mt-4 md:mt-6 mb-4"
+            className="h-[1px] bg-gradient-to-r from-transparent via-brand-blue/50 to-transparent mt-6 mb-4"
           />
 
           <motion.p
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 0.5, y: 0 }}
             transition={{ duration: 1, delay: 2 }}
-            className="font-mono text-[8px] md:text-[10px] text-zinc-400 uppercase tracking-[0.3em] md:tracking-[0.5em] font-bold"
+            className="font-mono text-[10px] text-zinc-400 uppercase tracking-[0.5em] font-bold"
           >
             INITIALIZING ELITE PROTOCOLS
           </motion.p>
