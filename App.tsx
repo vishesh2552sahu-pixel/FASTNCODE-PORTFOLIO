@@ -4,7 +4,7 @@ import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import Lenis from 'lenis';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import CurtainLoader from './components/CurtainLoader';
+import LaptopIntro from './components/LaptopIntro';
 import CustomCursor from './components/CustomCursor';
 import Starfield from './components/Starfield';
 import Home from './pages/Home';
@@ -79,12 +79,11 @@ const App: React.FC = () => {
   }, [currentView, targetedServiceId]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaderActive(false);
-      setTimeout(() => setShowContent(true), 1200);
-    }, 3500);
-    return () => clearTimeout(timer);
-  }, []);
+    if (!isLoaderActive) {
+      const timer = setTimeout(() => setShowContent(true), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoaderActive]);
 
   const handleNavigate = (view: View, subview?: string) => {
     setTargetedServiceId(subview || null);
@@ -109,38 +108,39 @@ const App: React.FC = () => {
       />
 
       <AnimatePresence mode="wait">
-        {isLoaderActive && <CurtainLoader key="loader" />}
+        {isLoaderActive ? (
+          <LaptopIntro key="loader" onComplete={() => setIsLoaderActive(false)} />
+        ) : (
+          showContent && (
+            <motion.div
+              key="content"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+              className="relative z-20"
+            >
+              <CustomCursor />
+              <Starfield />
+              <Header currentView={currentView} onNavigate={handleNavigate} />
+              
+              <motion.main className="relative z-10 pt-20">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentView}
+                    initial={{ opacity: 0, y: 40, filter: 'blur(15px)' }}
+                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                    exit={{ opacity: 0, y: -40, filter: 'blur(15px)' }}
+                    transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    {renderView()}
+                  </motion.div>
+                </AnimatePresence>
+                <Footer onNavigate={handleNavigate} />
+              </motion.main>
+            </motion.div>
+          )
+        )}
       </AnimatePresence>
-
-      <CustomCursor />
-      
-      <Starfield />
-
-      {showContent && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-20"
-        >
-          <Header currentView={currentView} onNavigate={handleNavigate} />
-          
-          <motion.main className="relative z-10 pt-20">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentView}
-                initial={{ opacity: 0, y: 40, filter: 'blur(15px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, y: -40, filter: 'blur(15px)' }}
-                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {renderView()}
-              </motion.div>
-            </AnimatePresence>
-            <Footer onNavigate={handleNavigate} />
-          </motion.main>
-        </motion.div>
-      )}
     </div>
   );
 };

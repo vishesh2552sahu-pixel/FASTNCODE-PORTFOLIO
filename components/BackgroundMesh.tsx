@@ -10,7 +10,7 @@ const Mesh = 'mesh' as any;
 const SphereGeometry = 'sphereGeometry' as any;
 const MeshBasicMaterial = 'meshBasicMaterial' as any;
 
-const ArchitecturalGrid = () => {
+const ArchitecturalGrid = ({ isMobile }: { isMobile: boolean }) => {
   // Use any for GridHelper ref
   const gridRef = useRef<any>(null!);
   
@@ -19,8 +19,9 @@ const ArchitecturalGrid = () => {
     const scroll = window.scrollY / (document.body.scrollHeight - window.innerHeight || 1);
     
     // Slow tilt based on mouse
-    gridRef.current.rotation.x = -Math.PI / 2.2 + (state.mouse.y * 0.1);
-    gridRef.current.rotation.z = time * 0.05 + (state.mouse.x * 0.1);
+    const tiltFactor = isMobile ? 0.02 : 0.1;
+    gridRef.current.rotation.x = -Math.PI / 2.2 + (state.mouse.y * tiltFactor);
+    gridRef.current.rotation.z = time * 0.05 + (state.mouse.x * tiltFactor);
     
     // Position shift with scroll
     gridRef.current.position.y = -20 - (scroll * 10);
@@ -29,7 +30,7 @@ const ArchitecturalGrid = () => {
   return (
     <GridHelper 
       ref={gridRef}
-      args={[100, 40, '#0052CC', '#000822']} 
+      args={[100, isMobile ? 20 : 40, '#0052CC', '#000822']} 
       position={[0, -20, 0]} 
       rotation={[-Math.PI / 2, 0, 0]}
     >
@@ -38,7 +39,7 @@ const ArchitecturalGrid = () => {
   );
 };
 
-const Blob = ({ color, position, scale, speed, index, baseOpacity }: { color: string, position: [number, number, number], scale: [number, number, number], speed: number, index: number, baseOpacity: number }) => {
+const Blob = ({ color, position, scale, speed, index, baseOpacity, isMobile }: { color: string, position: [number, number, number], scale: [number, number, number], speed: number, index: number, baseOpacity: number, isMobile: boolean }) => {
   // Use any for Mesh ref
   const meshRef = useRef<any>(null!);
   const initialPos = useMemo(() => new (THREE as any).Vector3(...position), [position]);
@@ -57,26 +58,26 @@ const Blob = ({ color, position, scale, speed, index, baseOpacity }: { color: st
     lastScrollY.current = currentScrollY;
 
     // 1. Drifting movement
-    const driftX = Math.sin(time * speed) * 5;
-    const driftY = Math.cos(time * speed * 0.8) * 5;
+    const driftX = Math.sin(time * speed) * (isMobile ? 2 : 5);
+    const driftY = Math.cos(time * speed * 0.8) * (isMobile ? 2 : 5);
 
     // 2. Parallax
-    const scrollFactorY = (index % 2 === 0 ? 1 : -1) * 25;
-    const scrollFactorX = (index % 3 === 0 ? 1 : -1) * 12;
+    const scrollFactorY = (index % 2 === 0 ? 1 : -1) * (isMobile ? 15 : 25);
+    const scrollFactorX = (index % 3 === 0 ? 1 : -1) * (isMobile ? 8 : 12);
     
     const targetY = initialPos.y + driftY - (scroll * scrollFactorY);
     const targetX = initialPos.x + driftX + (scroll * scrollFactorX);
 
     // 3. High-damping Liquid Mouse Follow
-    const mouseX = state.mouse.x * 18;
-    const mouseY = state.mouse.y * 12;
+    const mouseX = isMobile ? 0 : state.mouse.x * 18;
+    const mouseY = isMobile ? 0 : state.mouse.y * 12;
     
     meshRef.current.position.x = (THREE as any).MathUtils.lerp(meshRef.current.position.x, targetX + mouseX, 0.015);
     meshRef.current.position.y = (THREE as any).MathUtils.lerp(meshRef.current.position.y, targetY + mouseY, 0.015);
 
     // 4. Shape Distortion based on velocity
     const velocityWarp = 1 + (velocity.current * 0.2);
-    const baseDistortion = 1 + scroll * 1.2;
+    const baseDistortion = 1 + scroll * (isMobile ? 0.6 : 1.2);
     
     meshRef.current.scale.set(
       scale[0] * baseDistortion * velocityWarp,
@@ -91,17 +92,30 @@ const Blob = ({ color, position, scale, speed, index, baseOpacity }: { color: st
 
   return (
     <Mesh ref={meshRef} position={position}>
-      <SphereGeometry args={[1, 64, 64]} />
+      <SphereGeometry args={[1, isMobile ? 32 : 64, isMobile ? 32 : 64]} />
       <MeshBasicMaterial color={color} transparent opacity={baseOpacity} />
     </Mesh>
   );
 };
 
 const BackgroundMesh: React.FC = () => {
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <div className="fixed inset-0 z-0 overflow-hidden bg-brand-obsidian">
-      <Canvas camera={{ position: [0, 0, 50], fov: 45 }} dpr={[1, 2]}>
-        <ArchitecturalGrid />
+      <Canvas 
+        camera={{ position: [0, 0, isMobile ? 60 : 50], fov: isMobile ? 60 : 45 }} 
+        dpr={isMobile ? 1 : [1, 2]}
+        gl={{ antialias: false, powerPreference: "high-performance" }}
+      >
+        <ArchitecturalGrid isMobile={isMobile} />
         
         {/* Deep background contrast blue - Reduced to sit further back */}
         <Blob 
@@ -111,6 +125,7 @@ const BackgroundMesh: React.FC = () => {
           scale={[35, 30, 1]} 
           speed={0.2} 
           baseOpacity={0.15}
+          isMobile={isMobile}
         />
 
         {/* The "Obsidian" Void Blob for deep depth */}
@@ -121,6 +136,7 @@ const BackgroundMesh: React.FC = () => {
           scale={[60, 55, 1]} 
           speed={0.1} 
           baseOpacity={0.1}
+          isMobile={isMobile}
         />
 
         {/* Core Brand Blue - Vivid Anchor, shifted slightly back to soften */}
@@ -131,6 +147,7 @@ const BackgroundMesh: React.FC = () => {
           scale={[25, 25, 1]} 
           speed={0.4} 
           baseOpacity={0.35}
+          isMobile={isMobile}
         />
         
         {/* Bright accent highlight - Distinct but small */}
@@ -141,6 +158,7 @@ const BackgroundMesh: React.FC = () => {
           scale={[15, 15, 1]} 
           speed={0.5} 
           baseOpacity={0.25}
+          isMobile={isMobile}
         />
 
         {/* Muted deep purple - Adds subtle chromatic richness */}
@@ -151,6 +169,7 @@ const BackgroundMesh: React.FC = () => {
           scale={[25, 25, 1]} 
           speed={0.3} 
           baseOpacity={0.12}
+          isMobile={isMobile}
         />
 
         {/* Dark Purple Blob - Balanced presence */}
@@ -161,11 +180,12 @@ const BackgroundMesh: React.FC = () => {
           scale={[18, 18, 1]} 
           speed={0.35} 
           baseOpacity={0.15}
+          isMobile={isMobile}
         />
       </Canvas>
       
       {/* Increased backdrop blur for deeper separation */}
-      <div className="absolute inset-0 backdrop-blur-[140px] pointer-events-none" />
+      <div className={`absolute inset-0 ${isMobile ? 'backdrop-blur-[80px]' : 'backdrop-blur-[140px]'} pointer-events-none`} />
       
       {/* Refined gradient overlays to anchor the content and deepen the corners */}
       <div className="absolute inset-0 bg-gradient-to-tr from-brand-blue/5 via-brand-obsidian/75 to-brand-obsidian/95 pointer-events-none" />
