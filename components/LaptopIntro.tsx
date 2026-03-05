@@ -318,7 +318,10 @@ const LaptopIntro: React.FC<LaptopIntroProps> = ({ onComplete }) => {
           <div className="absolute inset-0 bg-[#0a0a0a] rounded-xl border border-white/5 shadow-xl">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 md:w-24 h-16 md:h-24 rounded-full bg-[#111] flex items-center justify-center border border-white/5">
               <div className="w-8 md:w-12 h-8 md:h-12 bg-[#0066FF] rounded-full blur-lg md:blur-xl animate-pulse opacity-30 md:opacity-40" />
-              <div className="absolute w-6 md:w-8 h-6 md:w-8 bg-[#0066FF] rounded-full shadow-[0_0_15px_rgba(0,102,255,0.4)] md:shadow-[0_0_20px_rgba(0,102,255,0.5)]" />
+              <svg width="16" height="16" viewBox="0 0 100 100" className="absolute z-10 scale-[1.5] md:scale-[2]">
+                <path d="M50 5 L85 60 L15 60 Z" fill="white" />
+                <path d="M15 60 L50 50 L85 60 L95 90 L50 75 L5 90 Z" fill="white" opacity="0.6" />
+              </svg>
             </div>
           </div>
 

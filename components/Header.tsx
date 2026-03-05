@@ -12,10 +12,9 @@ const Header: React.FC<HeaderProps> = ({ currentView, onNavigate }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems: { label: string; view: View }[] = [
-    { label: 'HOME', view: 'home' },
+    { label: 'STUDIO', view: 'home' },
     { label: 'SERVICES', view: 'services' },
-    { label: 'PORTFOLIO', view: 'work' },
-    { label: 'PROCESS', view: 'home' },
+    { label: 'WORK', view: 'work' },
     { label: 'CONTACT', view: 'contact' },
   ];
 
@@ -37,21 +36,22 @@ const Header: React.FC<HeaderProps> = ({ currentView, onNavigate }) => {
           className="flex items-center gap-3 md:gap-4 group cursor-pointer pointer-events-auto"
         >
           <div className="w-9 h-9 md:w-10 md:h-10 border border-brand-blue/30 rounded-lg md:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-500 overflow-hidden relative bg-brand-obsidian/40 backdrop-blur-md">
-            <svg width="18" height="18" viewBox="0 0 100 100" className="relative z-10 text-brand-blue">
-               <path d="M50 10 L85 90 L15 90 Z" fill="currentColor" opacity="0.8" />
+            <svg width="22" height="22" viewBox="0 0 100 100" className="relative z-10">
+               <path d="M50 5 L85 60 L15 60 Z" fill="#0066FF" />
+               <path d="M15 60 L50 50 L85 60 L95 90 L50 75 L5 90 Z" fill="#7085FF" />
             </svg>
           </div>
-          <span className="text-[10px] md:text-[12px] font-black tracking-[0.3em] md:tracking-[0.4em] uppercase text-white hover:text-brand-blue transition-colors">
-            FASTNCODE
+          <span className="text-[9px] md:text-[11px] font-black tracking-[0.3em] md:tracking-[0.4em] uppercase text-white hover:text-brand-blue transition-colors">
+            FAST & CODE
           </span>
         </div>
 
         <div className="hidden md:flex items-center gap-10 lg:gap-12 pointer-events-auto">
           {navItems.map((item) => (
             <button
-              key={item.label}
+              key={item.view}
               onClick={() => handleNav(item.view)}
-              className={`text-[10px] font-black uppercase tracking-[0.4em] transition-all relative group ${
+              className={`text-[9px] font-black uppercase tracking-[0.4em] transition-all relative group ${
                 currentView === item.view ? 'text-brand-blue' : 'text-zinc-500 hover:text-white'
               }`}
             >
@@ -63,9 +63,9 @@ const Header: React.FC<HeaderProps> = ({ currentView, onNavigate }) => {
           ))}
           <button 
             onClick={() => handleNav('contact')}
-            className="px-8 py-3 glass text-brand-blue text-[10px] font-black tracking-[0.3em] uppercase rounded-full hover:bg-brand-blue hover:text-white transition-all duration-500 shadow-xl border border-brand-blue/20"
+            className="px-8 py-3 glass text-brand-blue text-[9px] font-black tracking-[0.3em] uppercase rounded-full hover:bg-brand-blue hover:text-white transition-all duration-500 shadow-xl border border-brand-blue/20"
           >
-            GET STARTED
+            START PROJECT
           </button>
         </div>
 

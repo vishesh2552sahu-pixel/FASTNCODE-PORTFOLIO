@@ -14,7 +14,10 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="col-span-12 md:col-span-6 lg:col-span-5">
           <div className="flex items-center gap-3 mb-8 md:mb-10 group cursor-pointer" onClick={() => onNavigate?.('home')}>
             <div className="w-10 h-10 md:w-12 md:h-12 bg-brand-blue rounded-xl flex items-center justify-center shadow-[0_0_30px_rgba(0,102,255,0.3)]">
-              <Zap className="text-white fill-white" size={20} />
+              <svg width="24" height="24" viewBox="0 0 100 100" className="relative z-10">
+                <path d="M50 5 L85 60 L15 60 Z" fill="white" />
+                <path d="M15 60 L50 50 L85 60 L95 90 L50 75 L5 90 Z" fill="white" opacity="0.6" />
+              </svg>
             </div>
             <span className="text-2xl md:text-4xl font-black tracking-tighter uppercase shimmer-text">
               FAST & CODE
