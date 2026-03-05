@@ -99,13 +99,8 @@ const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
           </motion.div>
         </motion.div>
 
-        <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-20 text-center md:text-left max-w-7xl mx-auto items-center md:items-end px-6">
-          <div className="md:col-span-8">
-            <h2 className="text-white text-3xl sm:text-4xl md:text-8xl font-black leading-[1] tracking-tighter uppercase italic text-pretty">
-              {sloganText}
-            </h2>
-          </div>
-          <div className="md:col-span-4 flex flex-col items-center md:items-end w-full">
+        <motion.div variants={item} className="flex flex-col items-center justify-center max-w-7xl mx-auto px-6">
+          <div className="w-full max-w-md">
              <button 
                onClick={() => onNavigate('contact')}
                className="group relative px-10 md:px-16 py-6 md:py-10 bg-brand-blue text-white font-black uppercase tracking-[0.4em] md:tracking-[0.5em] text-[11px] md:text-[12px] overflow-hidden transition-all hover:shadow-[0_0_100px_rgba(0,102,255,0.6)] hover:scale-[1.05] active:scale-[0.95] w-full flex items-center justify-center rounded-2xl min-h-[70px]"

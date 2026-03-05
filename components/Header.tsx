@@ -12,9 +12,10 @@ const Header: React.FC<HeaderProps> = ({ currentView, onNavigate }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems: { label: string; view: View }[] = [
-    { label: 'STUDIO', view: 'home' },
+    { label: 'HOME', view: 'home' },
     { label: 'SERVICES', view: 'services' },
-    { label: 'WORK', view: 'work' },
+    { label: 'PORTFOLIO', view: 'work' },
+    { label: 'PROCESS', view: 'home' },
     { label: 'CONTACT', view: 'contact' },
   ];
 
@@ -40,17 +41,17 @@ const Header: React.FC<HeaderProps> = ({ currentView, onNavigate }) => {
                <path d="M50 10 L85 90 L15 90 Z" fill="currentColor" opacity="0.8" />
             </svg>
           </div>
-          <span className="text-[9px] md:text-[11px] font-black tracking-[0.3em] md:tracking-[0.4em] uppercase text-white hover:text-brand-blue transition-colors">
-            FAST & CODE
+          <span className="text-[10px] md:text-[12px] font-black tracking-[0.3em] md:tracking-[0.4em] uppercase text-white hover:text-brand-blue transition-colors">
+            FASTNCODE
           </span>
         </div>
 
         <div className="hidden md:flex items-center gap-10 lg:gap-12 pointer-events-auto">
           {navItems.map((item) => (
             <button
-              key={item.view}
+              key={item.label}
               onClick={() => handleNav(item.view)}
-              className={`text-[9px] font-black uppercase tracking-[0.4em] transition-all relative group ${
+              className={`text-[10px] font-black uppercase tracking-[0.4em] transition-all relative group ${
                 currentView === item.view ? 'text-brand-blue' : 'text-zinc-500 hover:text-white'
               }`}
             >
@@ -62,9 +63,9 @@ const Header: React.FC<HeaderProps> = ({ currentView, onNavigate }) => {
           ))}
           <button 
             onClick={() => handleNav('contact')}
-            className="px-8 py-3 glass text-brand-blue text-[9px] font-black tracking-[0.3em] uppercase rounded-full hover:bg-brand-blue hover:text-white transition-all duration-500 shadow-xl border border-brand-blue/20"
+            className="px-8 py-3 glass text-brand-blue text-[10px] font-black tracking-[0.3em] uppercase rounded-full hover:bg-brand-blue hover:text-white transition-all duration-500 shadow-xl border border-brand-blue/20"
           >
-            START PROJECT
+            GET STARTED
           </button>
         </div>
 
