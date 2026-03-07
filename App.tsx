@@ -5,7 +5,6 @@ import Lenis from 'lenis';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import LaptopIntro from './components/LaptopIntro';
-import CustomCursor from './components/CustomCursor';
 import Starfield from './components/Starfield';
 import Home from './pages/Home';
 import Services from './pages/Services';
@@ -119,7 +118,6 @@ const App: React.FC = () => {
               transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
               className="relative z-20"
             >
-              <CustomCursor />
               <Starfield />
               <Header currentView={currentView} onNavigate={handleNavigate} />
               
