@@ -28,10 +28,16 @@
     margin: 0;
     color: white;
     overflow-x: hidden;
-    cursor: none;
     background: #050505;
     width: 100%;
     min-height: 100vh;
+    cursor: none;
+  }
+}
+
+@media (pointer: fine) {
+  * {
+    cursor: none !important;
   }
 }
 

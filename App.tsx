@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import LaptopIntro from './components/LaptopIntro';
 import Starfield from './components/Starfield';
+import CustomCursor from './components/CustomCursor';
 import Home from './pages/Home';
 import Services from './pages/Services';
 import Work from './pages/Work';
@@ -101,6 +102,7 @@ const App: React.FC = () => {
 
   return (
     <div className="relative min-h-screen bg-[#050505] font-sans selection:bg-brand-blue selection:text-white overflow-x-hidden">
+      <CustomCursor />
       <motion.div
         className="fixed top-0 left-0 right-0 h-[2px] bg-brand-blue z-[2000] origin-left shadow-[0_0_20px_rgba(0,102,255,0.6)]"
         style={{ scaleX }}
